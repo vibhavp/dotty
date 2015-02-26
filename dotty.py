@@ -24,7 +24,8 @@ def main():
     except Exception as e:
         print("Usage: dotty.py FILE", file=sys.stderr)
         exit(1)
-
+        
+    os.chdir(os.expanduser(os.path.dirname(sys.argv[1])))
     directories  = js.get("directories")
     links = js.get("links")
     # Check if directories exist.
