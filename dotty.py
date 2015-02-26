@@ -15,7 +15,11 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-import json, os, sys, shutil
+import json
+import os
+import shutil
+from sys import stderr
+import argparse
 
 def ask_user(prompt):
     valid = {"yes":True, 'y':True, "no":False, 'n':False}
@@ -24,19 +28,23 @@ def ask_user(prompt):
         choice = input().lower()
         if choice in valid:
             return valid[choice]
+        elif choice == '':
+            return True;
         else:
-            print("Enter a correct choice.", file=sys.stderr)
+            print("Enter a correct choice.", file=stderr)
 
 def main():
-    try:
-        js = json.load(open(sys.argv[1]))
-    except FileNotFoundError as e:
-        print("Usage: dotty.py FILE", file=sys.stderr)
-        exit(1)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("config", help="the JSON fileyou want to use")
+    parser.add_argument("-r", "--replace", action="store_true",
+                        help="replace files/folders if they already exist")
+    args = parser.parse_args()
+    js = json.load(open(args.config))
+    os.chdir(os.path.expanduser(os.path.abspath(os.path.dirname(args.config))))
 
-    os.chdir(os.path.expanduser(os.path.dirname(sys.argv[1])))
     directories  = js.get("directories")
     links = js.get("link")
+    copy = js.get("copy")
     commands = js.get("commands")
     # Check if directories exist.
     for path in directories:
@@ -49,8 +57,7 @@ def main():
         dest = os.path.expanduser(links[src])
         src = os.path.abspath(src)
         if os.path.exists(dest):
-            if ask_user(dest+" exists, delete it? [Y/n]"):
-                os.remove(dest)
+            if not args.replace and ask_user(dest+" exists, delete it? [Y/n]"):
                 if os.path.isfile(dest):
                     os.remove(dest)
                 else:
@@ -59,6 +66,20 @@ def main():
                 continue
         print("Linking %s -> %s" % (dest, src))
         os.symlink(src, dest)
+
+    for src in copy:
+        dest = os.path.expanduser(copy[src])
+        src = os.path.abspath(src)
+        if os.path.exists(dest):
+            if ask_user(dest+ " exists, delete it? [Y/n]"):
+                if os.path.isfile(dest):
+                    os.remove(dest)
+                else:
+                    shutil.rmtree(dest)
+            else:
+                continue
+        print("Copying %s -> %s" % (src, dest))
+        shutil.copy(src, dest)
 
     for command in commands:
         os.system(command)
