@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/bin/python
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,20 +14,28 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-import json
-import sys
-import os
+import json, os, sys, shutil
+
+def ask_user(prompt):
+    valid = {"yes":True, 'y':True, "no":False, 'n':False}
+    while True:
+        print(prompt+" ",end="")
+        choice = input().lower()
+        if choice in valid:
+            return valid[choice]
+        else:
+            print("Enter a correct choice.", file=sys.stderr)
 
 def main():
     try:
         js = json.load(open(sys.argv[1]))
-    except Exception as e:
+    except FileNotFoundError as e:
         print("Usage: dotty.py FILE", file=sys.stderr)
         exit(1)
-        
-    os.chdir(os.expanduser(os.path.dirname(sys.argv[1])))
+
+    os.chdir(os.path.expanduser(os.path.dirname(sys.argv[1])))
     directories  = js.get("directories")
-    links = js.get("links")
+    links = js.get("link")
     commands = js.get("commands")
     # Check if directories exist.
     for path in directories:
@@ -39,6 +47,15 @@ def main():
     for src in links:
         dest = os.path.expanduser(links[src])
         src = os.path.abspath(src)
+        if os.path.exists(dest):
+            if ask_user(dest+" exists, delete it? [Y/n]"):
+                os.remove(dest)
+                if os.path.isfile(dest):
+                    os.remove(dest)
+                else:
+                    shutil.rmtree(dest)
+            else:
+                continue
         print("Linking %s -> %s" % (dest, src))
         os.symlink(src, dest)
 
