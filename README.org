@@ -1,0 +1,35 @@
+#+TITLE: Dotty, a dotfile sync tool
+
+Dotty is a little python script for syncing dotfiles stored on your git repo.
+
+* Installation:
+  Add dotty to your dotfiles git repository:
+  ~git submodule add https://github.com/vibhavp/dotty~
+  To Update dotty to the latest version:
+  ~git submodule update --remote dotty~
+  
+* Configuration
+  Dotty uses a JSON-formatted config located on the root of your dotfile repository.
+  Currently, dotty can create/check ~directories~, ~link~ files/directories, 
+  and execute shell ~commands~. 
+
+* Example
+  #+BEGIN_SRC javascript
+    {
+        "directories": ["~/emacs.d"],
+        
+        "link": {
+            "source": "dest",
+            "zshrc": "~/.zshrc"
+            //Directories can be linked too
+            "emacs/lisp/": "~/.emacs.d/lisp"
+        },
+
+        "commands": ["emacs -batch -Q -l ~/.emacs.d/firstrun.el"]
+    }
+  #+END_SRC
+  
+* Usage
+  #+BEGIN_SRC sh
+    python dotty.py CONFIG
+  #+END_SRC 
