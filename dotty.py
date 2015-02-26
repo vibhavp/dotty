@@ -28,6 +28,7 @@ def main():
     os.chdir(os.expanduser(os.path.dirname(sys.argv[1])))
     directories  = js.get("directories")
     links = js.get("links")
+    commands = js.get("commands")
     # Check if directories exist.
     for path in directories:
         exp = os.path.expanduser(path)
@@ -40,6 +41,11 @@ def main():
         src = os.path.abspath(src)
         print("Linking %s -> %s" % (dest, src))
         os.symlink(src, dest)
+
+    for command in commands:
+        os.system(command)
+
+    print("Done!")
 
 if __name__ == "__main__":
     main()
