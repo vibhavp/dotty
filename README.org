@@ -34,5 +34,12 @@ Dotty is a little python script for syncing dotfiles stored on your git repo.
   
 * Usage
   #+BEGIN_SRC sh
-    python dotty.py CONFIG
+    usage: dotty.py [-h] [-r] config
+
+    positional arguments:
+      config         the JSON file you want to use
+
+    optional arguments:
+      -h, --help     show this help message and exit
+      -r, --replace  replace files/folders if they already exist
   #+END_SRC 
