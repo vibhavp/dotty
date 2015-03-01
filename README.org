@@ -13,7 +13,7 @@ Dotty is a little python script for syncing dotfiles stored on your git repo.
   
 * Configuration
   Dotty uses a JSON-formatted config located on the root of your dotfile repository.
-  Currently, dotty can create/check ~directories~, ~link~ files/directories, 
+  Currently, dotty can create/check ~directories~, ~link~ or ~copy~ files/directories,  
   and execute shell ~commands~. 
 
 * Example
