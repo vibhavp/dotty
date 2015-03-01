@@ -28,6 +28,11 @@ Dotty is a little python script for syncing dotfiles stored on your git repo.
             "emacs/lisp/": "~/.emacs.d/lisp"
         },
 
+        "copy": {
+            //files you want to be copied
+            "offlineimaprc": "~/.offlineimaprc"
+        },
+
         "commands": ["emacs -batch -Q -l ~/.emacs.d/firstrun.el"]
     }
   #+END_SRC
