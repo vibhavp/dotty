@@ -35,7 +35,7 @@ def ask_user(prompt):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("config", help="the JSON fileyou want to use")
+    parser.add_argument("config", help="the JSON file you want to use")
     parser.add_argument("-r", "--replace", action="store_true",
                         help="replace files/folders if they already exist")
     args = parser.parse_args()
