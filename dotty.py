@@ -33,6 +33,44 @@ def ask_user(prompt):
         else:
             print("Enter a correct choice.", file=stderr)
 
+def create_directory(path):
+    exp = os.path.expanduser(path)
+    if (not os.path.isdir(exp)):
+        print(exp+" doesnt exist, creating.")
+        os.makedirs(exp)
+
+def create_symlink(src, dest, replace):
+    dest = os.path.expanduser(dest)
+    src = os.path.abspath(src)
+    if os.path.exists(dest):
+        if not replace and ask_user(dest+" exists, delete it? [Y/n]"):
+            if os.path.isfile(dest):
+                os.remove(dest)
+            else:
+                shutil.rmtree(dest)
+        else:
+            return
+    print("Linking %s -> %s" % (dest, src))
+    os.symlink(src, dest)
+
+def copy_path(src, dest):
+    dest = os.path.expanduser(copy[src])
+    src = os.path.abspath(src)
+    if os.path.exists(dest):
+        if ask_user(dest+ " exists, delete it? [Y/n]"):
+            if os.path.isfile(dest):
+                os.remove(dest)
+            else:
+                shutil.rmtree(dest)
+        else:
+            return
+    print("Copying %s -> %s" % (src, dest))
+    shutil.copy(src, dest)
+
+def run_command(command):
+    os.system(command)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("config", help="the JSON file you want to use")
@@ -46,43 +84,14 @@ def main():
     links = js.get("link")
     copy = js.get("copy")
     commands = js.get("commands")
-    # Check if directories exist.
-    for path in directories:
-        exp = os.path.expanduser(path)
-        if (not os.path.isdir(exp)):
-            print(exp+" doesnt exist, creating.")
-            os.makedirs(exp)
 
-    for src in links:
-        dest = os.path.expanduser(links[src])
-        src = os.path.abspath(src)
-        if os.path.exists(dest):
-            if not args.replace and ask_user(dest+" exists, delete it? [Y/n]"):
-                if os.path.isfile(dest):
-                    os.remove(dest)
-                else:
-                    shutil.rmtree(dest)
-            else:
-                continue
-        print("Linking %s -> %s" % (dest, src))
-        os.symlink(src, dest)
+    [create_directory(path) for path in directories if directories]
 
-    for src in copy:
-        dest = os.path.expanduser(copy[src])
-        src = os.path.abspath(src)
-        if os.path.exists(dest):
-            if ask_user(dest+ " exists, delete it? [Y/n]"):
-                if os.path.isfile(dest):
-                    os.remove(dest)
-                else:
-                    shutil.rmtree(dest)
-            else:
-                continue
-        print("Copying %s -> %s" % (src, dest))
-        shutil.copy(src, dest)
+    [create_symlink(src, links[src], args.replace) for src in links if links]
 
-    for command in commands:
-        os.system(command)
+    [copy_path(src, copy[src]) for src in copy if copy]
+
+    [run_command(command) for command in commands if commands]
 
     print("Done!")
 
