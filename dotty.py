@@ -54,7 +54,7 @@ def create_symlink(src, dest, replace):
     os.symlink(src, dest)
 
 def copy_path(src, dest):
-    dest = os.path.expanduser(copy[src])
+    dest = os.path.expanduser(src)
     src = os.path.abspath(src)
     if os.path.exists(dest):
         if ask_user(dest+ " exists, delete it? [Y/n]"):
