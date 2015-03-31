@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python3
 
 # Copyright (C) 2015 Vibhav Pant <vibhavp@gmail.com>
 # This program is free software; you can redistribute it and/or modify
@@ -54,7 +54,7 @@ def create_symlink(src, dest, replace):
     os.symlink(src, dest)
 
 def copy_path(src, dest):
-    dest = os.path.expanduser(src)
+    dest = os.path.expanduser(dest)
     src = os.path.abspath(src)
     if os.path.exists(dest):
         if ask_user(dest+ " exists, delete it? [Y/n]"):
