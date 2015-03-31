@@ -54,7 +54,7 @@ def create_symlink(src, dest, replace):
     os.symlink(src, dest)
 
 def copy_path(src, dest):
-    dest = os.path.expanduser(copy[src])
+    dest = os.path.expanduser(src)
     src = os.path.abspath(src)
     if os.path.exists(dest):
         if ask_user(dest+ " exists, delete it? [Y/n]"):
@@ -85,13 +85,13 @@ def main():
     copy = js.get("copy")
     commands = js.get("commands")
 
-    [create_directory(path) for path in directories if directories]
+    if directories: [create_directory(path) for path in directories]
 
-    [create_symlink(src, links[src], args.replace) for src in links if links]
+    if links: [create_symlink(src, links[src], args.replace) for src in links]
 
-    [copy_path(src, copy[src]) for src in copy if copy]
+    if copy: [copy_path(src, copy[src]) for src in copy]
 
-    [run_command(command) for command in commands if commands]
+    if commands: [run_command(command) for command in commands]
 
     print("Done!")
 
