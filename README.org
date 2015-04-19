@@ -4,6 +4,7 @@
 
 #+BEGIN_CENTER
 [[https://github.com/vibhavp/dotty][View on Github]]
+
 Dotty is a little python script for syncing dotfiles stored on your git repo.
 #+END_CENTER
 
