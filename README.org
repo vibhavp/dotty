@@ -1,5 +1,6 @@
 #+OPTIONS: html-postamble:nil toc:nil
-#+HTML_HEAD: <link href="http://thomasf.github.io/solarized-css/solarized-light.min.css" rel="stylesheet"></link>
+#+INFOJS_OPT: view:t toc:t ltoc:t mouse:underline buttons:0 path:http://thomasf.github.io/solarized-css/org-info.min.js
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://thomasf.github.io/solarized-css/solarized-light.min.css" />
 #+TITLE: Dotty, a dotfile sync tool
 
 #+BEGIN_CENTER
