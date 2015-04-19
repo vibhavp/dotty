@@ -1,6 +1,11 @@
+#+OPTIONS: html-postamble:nil toc:nil
+#+HTML_HEAD: <link href="http://thomasf.github.io/solarized-css/solarized-light.min.css" rel="stylesheet"></link>
 #+TITLE: Dotty, a dotfile sync tool
 
+#+BEGIN_CENTER
+[[https://github.com/vibhavp/dotty][View on Github]]
 Dotty is a little python script for syncing dotfiles stored on your git repo.
+#+END_CENTER
 
 * Installation:
   Add dotty to your dotfiles git repository:
