@@ -43,14 +43,17 @@ def create_symlink(src, dest, replace):
     dest = os.path.expanduser(dest)
     src = os.path.abspath(src)
     if os.path.exists(dest):
-        if not replace and ask_user(dest+" exists, delete it? [Y/n]"):
+        if os.path.islink(dest) and os.readlink(dest) == src:
+            print("Skipping existing {0} -> {1}".format(dest, src))
+            return
+        elif not replace and ask_user(dest+" exists, delete it? [Y/n]"):
             if os.path.isfile(dest):
                 os.remove(dest)
             else:
                 shutil.rmtree(dest)
         else:
             return
-    print("Linking %s -> %s" % (dest, src))
+    print("Linking {0} -> {1}".format(dest, src))
     os.symlink(src, dest)
 
 def copy_path(src, dest):
@@ -64,7 +67,7 @@ def copy_path(src, dest):
                 shutil.rmtree(dest)
         else:
             return
-    print("Copying %s -> %s" % (src, dest))
+    print("Copying {0} -> {1}".format(src, dest))
     shutil.copy(src, dest)
 
 def run_command(command):
