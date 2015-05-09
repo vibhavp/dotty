@@ -22,14 +22,12 @@ from sys import stderr
 import argparse
 
 def ask_user(prompt):
-    valid = {"yes":True, 'y':True, "no":False, 'n':False}
+    valid = {"yes":True, 'y':True, '':True, "no":False, 'n':False}
     while True:
         print(prompt+" ",end="")
         choice = input().lower()
         if choice in valid:
             return valid[choice]
-        elif choice == '':
-            return True;
         else:
             print("Enter a correct choice.", file=stderr)
 
@@ -46,7 +44,7 @@ def create_symlink(src, dest, replace):
         if os.path.islink(dest) and os.readlink(dest) == src:
             print("Skipping existing {0} -> {1}".format(dest, src))
             return
-        elif not replace and ask_user(dest+" exists, delete it? [Y/n]"):
+        elif replace or ask_user(dest+" exists, delete it? [Y/n]"):
             if os.path.isfile(dest):
                 os.remove(dest)
             else:
