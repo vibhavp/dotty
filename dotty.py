@@ -21,6 +21,7 @@ import shutil
 from sys import stderr
 import argparse
 
+
 def ask_user(prompt):
     valid = {"yes":True, 'y':True, '':True, "no":False, 'n':False}
     while True:
@@ -31,11 +32,13 @@ def ask_user(prompt):
         else:
             print("Enter a correct choice.", file=stderr)
 
+
 def create_directory(path):
     exp = os.path.expanduser(path)
     if (not os.path.isdir(exp)):
         print(exp+" doesnt exist, creating.")
         os.makedirs(exp)
+
 
 def create_symlink(src, dest, replace):
     dest = os.path.expanduser(dest)
@@ -54,6 +57,7 @@ def create_symlink(src, dest, replace):
     print("Linking {0} -> {1}".format(dest, src))
     os.symlink(src, dest)
 
+
 def copy_path(src, dest):
     dest = os.path.expanduser(dest)
     src = os.path.abspath(src)
@@ -68,6 +72,7 @@ def copy_path(src, dest):
     print("Copying {0} -> {1}".format(src, dest))
     shutil.copy(src, dest)
 
+
 def run_command(command):
     os.system(command)
 
@@ -81,10 +86,11 @@ def main():
     js = json.load(open(args.config))
     os.chdir(os.path.expanduser(os.path.abspath(os.path.dirname(args.config))))
 
-    directories  = js.get("directories")
+    directories = js.get("directories")
     links = js.get("link")
     copy = js.get("copy")
     commands = js.get("commands")
+    pacman = js.get("pacman")
 
     if directories: [create_directory(path) for path in directories]
 
@@ -93,6 +99,9 @@ def main():
     if copy: [copy_path(src, copy[src]) for src in copy]
 
     if commands: [run_command(command) for command in commands]
+
+    if pacman: [run_command("sudo pacman --noconfirm -S "+package) for package
+                in pacman]
 
     print("Done!")
 
