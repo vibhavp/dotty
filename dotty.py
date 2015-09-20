@@ -100,8 +100,12 @@ def main():
 
     if commands: [run_command(command) for command in commands]
 
-    if pacman: [run_command("sudo pacman --noconfirm -S "+package) for package
-                in pacman]
+    if pacman:
+        packages = ""
+        for package in pacman:
+            packages += package + " "
+
+        run_command("sudo pacman -S "+packages)
 
     print("Done!")
 
