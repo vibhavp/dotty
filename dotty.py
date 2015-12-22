@@ -70,7 +70,10 @@ def copy_path(src, dest):
         else:
             return
     print("Copying {0} -> {1}".format(src, dest))
-    shutil.copy(src, dest)
+    if os.path.isfile(src):
+        shutil.copy(src, dest)
+    else:
+        shutil.copytree(src, dest)
 
 
 def run_command(command):
