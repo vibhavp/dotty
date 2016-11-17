@@ -43,12 +43,13 @@ def create_directory(path):
 def create_symlink(src, dest, replace):
     dest = os.path.expanduser(dest)
     src = os.path.abspath(src)
-    if os.path.exists(dest):
+    broken_symlink = os.path.lexists(dest) and not os.path.exists(dest)
+    if os.path.lexists(dest):
         if os.path.islink(dest) and os.readlink(dest) == src:
             print("Skipping existing {0} -> {1}".format(dest, src))
             return
         elif replace or ask_user(dest+" exists, delete it? [Y/n]"):
-            if os.path.isfile(dest):
+            if os.path.isfile(dest) or broken_symlink:
                 os.remove(dest)
             else:
                 shutil.rmtree(dest)
