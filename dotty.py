@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import print_function
 
 # Copyright (C) 2015 Vibhav Pant <vibhavp@gmail.com>
 # This program is free software; you can redistribute it and/or modify
@@ -21,6 +22,9 @@ import shutil
 from sys import stderr
 import argparse
 
+# Fix Python 2.x.
+try: input = raw_input
+except NameError: pass
 
 def ask_user(prompt):
     valid = {"yes":True, 'y':True, '':True, "no":False, 'n':False}
@@ -48,7 +52,7 @@ def create_symlink(src, dest, replace):
         if os.path.islink(dest) and os.readlink(dest) == src:
             print("Skipping existing {0} -> {1}".format(dest, src))
             return
-        elif replace or ask_user(dest+" exists, delete it? [Y/n]"):
+        elif replace or ask_user("{0} exists, delete it? [Y/n]".format(dest)):
             if os.path.isfile(dest) or broken_symlink:
                 os.remove(dest)
             else:
@@ -63,7 +67,7 @@ def copy_path(src, dest):
     dest = os.path.expanduser(dest)
     src = os.path.abspath(src)
     if os.path.exists(dest):
-        if ask_user(dest+ " exists, delete it? [Y/n]"):
+        if ask_user("{0} exists, delete it? [Y/n]".format(dest)):
             if os.path.isfile(dest):
                 os.remove(dest)
             else:
@@ -97,20 +101,14 @@ def main():
     pacman = js.get("pacman")
 
     if directories: [create_directory(path) for path in directories]
-
     if links: [create_symlink(src, links[src], args.replace) for src in links]
-
     if copy: [copy_path(src, copy[src]) for src in copy]
-
     if commands: [run_command(command) for command in commands]
-
     if pacman:
         packages = ""
         for package in pacman:
             packages += package + " "
-
         run_command("sudo pacman -S "+packages)
-
     print("Done!")
 
 if __name__ == "__main__":
