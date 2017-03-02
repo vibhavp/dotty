@@ -29,7 +29,7 @@ except NameError: pass
 def ask_user(prompt):
     valid = {"yes":True, 'y':True, '':True, "no":False, 'n':False}
     while True:
-        print(prompt+" ",end="")
+        print("{0} ".format(prompt),end="")
         choice = input().lower()
         if choice in valid:
             return valid[choice]
@@ -40,7 +40,7 @@ def ask_user(prompt):
 def create_directory(path):
     exp = os.path.expanduser(path)
     if (not os.path.isdir(exp)):
-        print(exp+" doesnt exist, creating.")
+        print("{0} doesnt exist, creating.".format(exp))
         os.makedirs(exp)
 
 
@@ -107,8 +107,8 @@ def main():
     if pacman:
         packages = ""
         for package in pacman:
-            packages += package + " "
-        run_command("sudo pacman -S "+packages)
+            packages += "{0} ".format(package)
+        run_command("sudo pacman -S {0}".format(packages))
     print("Done!")
 
 if __name__ == "__main__":
