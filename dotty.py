@@ -98,17 +98,18 @@ def main():
     links = js.get("link")
     copy = js.get("copy")
     commands = js.get("commands")
-    pacman = js.get("pacman")
+    install = js.get("install")
+    install_cmd = js.get("install_cmd")
 
     if directories: [create_directory(path) for path in directories]
     if links: [create_symlink(src, links[src], args.replace) for src in links]
     if copy: [copy_path(src, copy[src]) for src in copy]
     if commands: [run_command(command) for command in commands]
-    if pacman:
+    if install:
         packages = ""
-        for package in pacman:
-            packages += "{0} ".format(package)
-        run_command("sudo pacman -S {0}".format(packages))
+        for package in install:
+            packages += " {0}".format(package)
+        run_command("{0}{1}".format(install_cmd, packages))
     print("Done!")
 
 if __name__ == "__main__":
