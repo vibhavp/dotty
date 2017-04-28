@@ -94,22 +94,13 @@ def main():
     js = json.load(open(args.config))
     os.chdir(os.path.expanduser(os.path.abspath(os.path.dirname(args.config))))
 
-    directories = js.get("directories")
-    links = js.get("link")
-    copy = js.get("copy")
-    install = js.get("install")
-    install_cmd = js.get("install_cmd")
-    commands = js.get("commands")
-
-    if directories: [create_directory(path) for path in directories]
-    if links: [create_symlink(src, links[src], args.replace) for src in links]
-    if copy: [copy_path(src, copy[src]) for src in copy]
-    if install:
-        packages = ""
-        for package in install:
-            packages += " {0}".format(package)
-        run_command("{0}{1}".format(install_cmd, packages))
-    if commands: [run_command(command) for command in commands]
+    if 'directories' in js: [create_directory(path) for path in js['directories']]
+    if 'link' in js: [create_symlink(src, dst, args.replace) for src, dst in js['link'].items()]
+    if 'copy' in js: [copy_path(src, dst) for src in js['copy'].items()]
+    if 'install' in js and 'install_cmd' in js:
+        packages = ' '.join(js['install'])
+        run_command("{0} {1}".format(js['install_cmd'], packages))
+    if 'commands' in js: [run_command(command) for command in js['commands']]
     print("Done!")
 
 if __name__ == "__main__":
