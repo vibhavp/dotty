@@ -60,7 +60,15 @@ def create_symlink(src, dest, replace):
         else:
             return
     print("Linking {0} -> {1}".format(dest, src))
-    os.symlink(src, dest)
+    try:
+        os.symlink(src, dest)
+    except AttributeError:
+        import ctypes
+        symlink = ctypes.windll.kernel32.CreateSymbolicLinkW
+        symlink.argtypes = (ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint32)
+        symlink.restype = ctypes.c_ubyte
+        flags = 1 if os.path.isdir(src) else 0
+        symlink(dest, src, flags)
 
 
 def copy_path(src, dest):
