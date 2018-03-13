@@ -53,7 +53,7 @@ def create_symlink(src, dest, replace):
             print("Skipping existing {0} -> {1}".format(dest, src))
             return
         elif replace or ask_user("{0} exists, delete it? [Y/n]".format(dest)):
-            if os.path.isfile(dest) or broken_symlink:
+            if os.path.isfile(dest) or broken_symlink or os.path.islink(dest):
                 os.remove(dest)
             else:
                 shutil.rmtree(dest)
@@ -76,7 +76,7 @@ def copy_path(src, dest):
     src = os.path.abspath(src)
     if os.path.exists(dest):
         if ask_user("{0} exists, delete it? [Y/n]".format(dest)):
-            if os.path.isfile(dest):
+            if os.path.isfile(dest) or os.path.islink(dest):
                 os.remove(dest)
             else:
                 shutil.rmtree(dest)
