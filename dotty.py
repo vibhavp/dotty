@@ -104,7 +104,7 @@ def main():
 
     if 'directories' in js: [create_directory(path) for path in js['directories']]
     if 'link' in js: [create_symlink(src, dst, args.replace) for src, dst in js['link'].items()]
-    if 'copy' in js: [copy_path(src, dst) for src in js['copy'].items()]
+    if 'copy' in js: [copy_path(src, dst) for src, dst in js['copy'].items()]
     if 'install' in js and 'install_cmd' in js:
         packages = ' '.join(js['install'])
         run_command("{0} {1}".format(js['install_cmd'], packages))
